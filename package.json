@@ -1,0 +1,20 @@
+{
+  "name": "twitch-polls",
+  "version": "1.2.0",
+  "description": "A Twitch polling tool bot and poll visualization overlay for custom polls.",
+  "main": "index.html",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@a11yup.github.com:a11yup/twitch-polls.git"
+  },
+  "keywords": [
+    "twitch",
+    "polls",
+    "bot"
+  ],
+  "author": "@a11yup",
+  "license": "GPL-3.0"
+}
