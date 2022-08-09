@@ -119,16 +119,3 @@ body {
 .option.draw-option .progress-bar-container .progress-bar {
   background-color: orange;
 }
-
-.option.no-votes .progress-bar-container {
-  border-color: orangered;
-}
-
-.option.no-votes .progress-bar-container .progress-bar {
-  background-color: orangered;
-}
-
-.option.no-votes .option-number {
-  background-color: orangered;
-  color: #000000;
-}
