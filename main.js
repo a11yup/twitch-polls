@@ -2,12 +2,14 @@ import {
   handlePollEnd,
   handlePollResume,
   handlePollStart,
+  handlePollStop,
   handlePollTitleChange,
   handlePollVote,
-} from "./stateUpdaters";
+} from "./stateUpdaters.js";
 import {
   getTotalVoteCount,
   getVoteCountsPerOption,
+  getWinningOptions,
 } from "./stateComputations.js";
 import {
   isPollEnd,
@@ -18,7 +20,7 @@ import {
   isPositionChange,
   isPrivilegedUser,
   isValidVote,
-} from "./messageCheckers";
+} from "./messageCheckers.js";
 
 const INITIAL_POLL_STATE = {
   active: false,
@@ -101,6 +103,8 @@ function renderUpdate(pollState) {
   });
 
   if (!pollState.active) {
+    const winningOptions = getWinningOptions(pollState);
+
     if (winningOptions.length === 1) {
       const optionElement = document.getElementById(
         `option-${winningOptions[0]}`
@@ -142,7 +146,7 @@ function renderPositionChange(message) {
   containerElement.classList.add(newPositionClassName);
 }
 
-function setup() {
+export function setup() {
   const queryParameters = new URLSearchParams(window.location.search);
 
   const POSITION_CODE = queryParameters.get("position");
@@ -171,19 +175,19 @@ function setup() {
     }
 
     if (isPollStop(message) && isPrivilegedUser(tags)) {
-      pollState = handlePollStop(message, pollState);
+      pollState = handlePollStop(pollState);
       renderUpdate(pollState);
       return;
     }
 
     if (isPollResume(message) && isPrivilegedUser(tags)) {
-      pollState = handlePollResume(message, pollState);
+      pollState = handlePollResume(pollState);
       renderUpdate(pollState);
       return;
     }
 
     if (isPollEnd(message) && isPrivilegedUser(tags)) {
-      pollState = handlePollEnd(message, pollState);
+      pollState = handlePollEnd(pollState);
       renderUpdate(pollState);
       return;
     }
