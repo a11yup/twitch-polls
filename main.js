@@ -146,7 +146,7 @@ function renderPositionChange(message) {
   containerElement.classList.add(newPositionClassName);
 }
 
-function handleMessage(tags, message, pollState) {
+export function handleMessage(tags, message, pollState) {
   if (isPollStart(message) && isPrivilegedUser(tags)) {
     pollState = handlePollStart(message, pollState);
     renderInitial(pollState);
