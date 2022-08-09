@@ -3,7 +3,7 @@ import {
   getWinningOptions,
   getVoteCountsPerOption,
   getTotalVoteCount,
-} from "../stateComputations.js";
+} from "../src/stateComputations.js";
 import { expect } from "chai";
 
 let pollState;
