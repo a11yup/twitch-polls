@@ -13,8 +13,12 @@ import {
   isPositionChange,
   isPrivilegedUser,
   isValidVote,
+  POLL_VOTE_EXTRACTION_PATTERN,
 } from "../messageCheckers.js";
-import { expect } from "chai";
+import chai, { expect } from "chai";
+import chaiMatch from "chai-match";
+
+chai.use(chaiMatch);
 
 describe("POLL_SIMPLE_DETECTION_PATTERN", function () {
   it("detects the right commands", function () {
@@ -139,6 +143,68 @@ describe("POLL_POSITION_DETECTION_PATTERN", function () {
   });
 });
 
+describe("POLL_VOTE_EXTRACTION_PATTERN", function () {
+  it("detect and extract poll votes correctly", function () {
+    expect("0")
+      .to.match(POLL_VOTE_EXTRACTION_PATTERN)
+      .and.capture(0)
+      .equals("0");
+
+    expect("9")
+      .to.match(POLL_VOTE_EXTRACTION_PATTERN)
+      .and.capture(0)
+      .equals("9");
+
+    expect("2")
+      .to.match(POLL_VOTE_EXTRACTION_PATTERN)
+      .and.capture(0)
+      .equals("2");
+
+    expect("99").to.not.match(POLL_VOTE_EXTRACTION_PATTERN);
+
+    expect("2 ")
+      .to.match(POLL_VOTE_EXTRACTION_PATTERN)
+      .and.capture(0)
+      .equals("2");
+
+    expect(" 2")
+      .to.match(POLL_VOTE_EXTRACTION_PATTERN)
+      .and.capture(0)
+      .equals("2");
+
+    expect(" 2 ")
+      .to.match(POLL_VOTE_EXTRACTION_PATTERN)
+      .and.capture(0)
+      .equals("2");
+
+    expect("2 test")
+      .to.match(POLL_VOTE_EXTRACTION_PATTERN)
+      .and.capture(0)
+      .equals("2");
+
+    expect("2 test ")
+      .to.match(POLL_VOTE_EXTRACTION_PATTERN)
+      .and.capture(0)
+      .equals("2");
+
+    expect(" 2 test")
+      .to.match(POLL_VOTE_EXTRACTION_PATTERN)
+      .and.capture(0)
+      .equals("2");
+
+    expect(" 2 test ")
+      .to.match(POLL_VOTE_EXTRACTION_PATTERN)
+      .and.capture(0)
+      .equals("2");
+
+    expect("2test").to.not.match(POLL_VOTE_EXTRACTION_PATTERN);
+    expect(" 2test").to.not.match(POLL_VOTE_EXTRACTION_PATTERN);
+    expect(" 2test ").to.not.match(POLL_VOTE_EXTRACTION_PATTERN);
+    expect("test 2").to.not.match(POLL_VOTE_EXTRACTION_PATTERN);
+    expect("test2").to.not.match(POLL_VOTE_EXTRACTION_PATTERN);
+  });
+});
+
 describe("isPollStart()", function () {
   it("returns true for the right commands", function () {
     expect(isPollStart("!poll")).to.be.true;
@@ -249,7 +315,7 @@ describe("isValidVote()", function () {
     expect(isValidVote(message, pollState)).to.be.false;
   });
 
-  it("returns false if the message does not contain a valid number", function () {
+  it("returns false if the message does not start with a separate single digit number", function () {
     const pollState = {
       active: true,
       visible: true,
@@ -258,12 +324,20 @@ describe("isValidVote()", function () {
       userVotes: { user1: "1", user2: "2" },
     };
 
-    const message = "some text";
+    let message = "some text";
+    expect(isValidVote(message, pollState)).to.be.false;
 
+    message = "some text 2";
+    expect(isValidVote(message, pollState)).to.be.false;
+
+    message = "2text";
+    expect(isValidVote(message, pollState)).to.be.false;
+
+    message = " 2text";
     expect(isValidVote(message, pollState)).to.be.false;
   });
 
-  it("returns true if the message does contain a valid number", function () {
+  it("returns true if the message starts with a separate single digit number", function () {
     const pollState = {
       active: true,
       visible: true,
@@ -272,8 +346,43 @@ describe("isValidVote()", function () {
       userVotes: { user1: "1", user2: "2" },
     };
 
-    const message = "2";
-
+    let message = "9";
     expect(isValidVote(message, pollState)).to.be.true;
+
+    message = "0";
+    expect(isValidVote(message, pollState)).to.be.true;
+
+    message = "2";
+    expect(isValidVote(message, pollState)).to.be.true;
+
+    message = "99";
+    expect(isValidVote(message, pollState)).to.be.false;
+
+    message = "2 test";
+    expect(isValidVote(message, pollState)).to.be.true;
+
+    message = "2 test ";
+    expect(isValidVote(message, pollState)).to.be.true;
+
+    message = " 2 test";
+    expect(isValidVote(message, pollState)).to.be.true;
+
+    message = " 2 test ";
+    expect(isValidVote(message, pollState)).to.be.true;
+
+    message = "2test";
+    expect(isValidVote(message, pollState)).to.be.false;
+
+    message = " 2test";
+    expect(isValidVote(message, pollState)).to.be.false;
+
+    message = " 2test ";
+    expect(isValidVote(message, pollState)).to.be.false;
+
+    message = "test 2";
+    expect(isValidVote(message, pollState)).to.be.false;
+
+    message = "test2";
+    expect(isValidVote(message, pollState)).to.be.false;
   });
 });

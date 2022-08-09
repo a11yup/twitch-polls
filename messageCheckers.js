@@ -12,6 +12,8 @@ export const POLL_TITLE_DETECTION_PATTERN = /^!polltitle( "[^"]+")$/;
 export const POLL_POSITION_DETECTION_PATTERN =
   /^!poll_tl$|^!poll_tr$|^!poll_br$|^!poll_bl$/;
 
+export const POLL_VOTE_EXTRACTION_PATTERN = /^\s*(\d)(?: .*)?$/;
+
 export const isPollStart = (message) =>
   POLL_SIMPLE_DETECTION_PATTERN.test(message) ||
   POLL_NUMBER_DETECTION_PATTERN.test(message) ||
@@ -32,4 +34,6 @@ export const isPositionChange = (message) =>
 export const isPrivilegedUser = (tags) => Boolean(tags.badges?.broadcaster);
 
 export const isValidVote = (message, pollState) =>
-  pollState.active && pollState.visible && /^\d$/g.test(message);
+  pollState.active &&
+  pollState.visible &&
+  POLL_VOTE_EXTRACTION_PATTERN.test(message);
