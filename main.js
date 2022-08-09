@@ -146,6 +146,50 @@ function renderPositionChange(message) {
   containerElement.classList.add(newPositionClassName);
 }
 
+function handleMessage(tags, message, pollState) {
+  if (isPollStart(message) && isPrivilegedUser(tags)) {
+    pollState = handlePollStart(message, pollState);
+    renderInitial(pollState);
+    return;
+  }
+
+  if (isPollStop(message) && isPrivilegedUser(tags)) {
+    pollState = handlePollStop(pollState);
+    renderUpdate(pollState);
+    return;
+  }
+
+  if (isPollResume(message) && isPrivilegedUser(tags)) {
+    pollState = handlePollResume(pollState);
+    renderUpdate(pollState);
+    return;
+  }
+
+  if (isPollEnd(message) && isPrivilegedUser(tags)) {
+    pollState = handlePollEnd(pollState);
+    renderUpdate(pollState);
+    return;
+  }
+
+  if (isPollTitleChange(message) && isPrivilegedUser(tags)) {
+    pollState = handlePollTitleChange(message, pollState);
+    renderUpdate(pollState);
+    return;
+  }
+
+  if (isPositionChange(message) && isPrivilegedUser(tags)) {
+    renderPositionChange(message);
+    return;
+  }
+
+  // anyone enters a poll vote while a poll is active
+  if (isValidVote(message, pollState)) {
+    pollState = handlePollVote(message, tags.username, pollState);
+    renderUpdate(pollState);
+    return;
+  }
+}
+
 export function setup() {
   const queryParameters = new URLSearchParams(window.location.search);
 
@@ -167,47 +211,7 @@ export function setup() {
 
   client.connect();
 
-  client.on("message", (_, tags, message) => {
-    if (isPollStart(message) && isPrivilegedUser(tags)) {
-      pollState = handlePollStart(message, pollState);
-      renderInitial(pollState);
-      return;
-    }
-
-    if (isPollStop(message) && isPrivilegedUser(tags)) {
-      pollState = handlePollStop(pollState);
-      renderUpdate(pollState);
-      return;
-    }
-
-    if (isPollResume(message) && isPrivilegedUser(tags)) {
-      pollState = handlePollResume(pollState);
-      renderUpdate(pollState);
-      return;
-    }
-
-    if (isPollEnd(message) && isPrivilegedUser(tags)) {
-      pollState = handlePollEnd(pollState);
-      renderUpdate(pollState);
-      return;
-    }
-
-    if (isPollTitleChange(message) && isPrivilegedUser(tags)) {
-      pollState = handlePollTitleChange(message, pollState);
-      renderUpdate(pollState);
-      return;
-    }
-
-    if (isPositionChange(message) && isPrivilegedUser(tags)) {
-      renderPositionChange(message);
-      return;
-    }
-
-    // anyone enters a poll vote while a poll is active
-    if (isValidVote(message, pollState)) {
-      pollState = handlePollVote(message, tags.username, pollState);
-      renderUpdate(pollState);
-      return;
-    }
-  });
+  client.on("message", (_, tags, message) =>
+    handleMessage(tags, message, pollState)
+  );
 }
