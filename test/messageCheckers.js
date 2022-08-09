@@ -31,7 +31,7 @@ describe("POLL_SIMPLE_DETECTION_PATTERN", function () {
 });
 
 describe("POLL_NUMBER_DETECTION_PATTERN", function () {
-  it.skip("detects the right commands", function () {
+  it("detects the right commands", function () {
     expect("!poll 2").to.match(POLL_NUMBER_DETECTION_PATTERN);
     expect("!poll 9").to.match(POLL_NUMBER_DETECTION_PATTERN);
     expect("!poll 1").not.to.match(POLL_NUMBER_DETECTION_PATTERN);

@@ -1,6 +1,6 @@
 export const POLL_SIMPLE_DETECTION_PATTERN = /^!poll$/;
 
-export const POLL_NUMBER_DETECTION_PATTERN = /^!poll \d$/;
+export const POLL_NUMBER_DETECTION_PATTERN = /^!poll [2-9]$/;
 
 export const POLL_QUOTED_PARAMETER_DETECTION_PATTERN =
   /^!poll( "[^"]*")( "[^"]+"){2,}$/;

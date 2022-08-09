@@ -40,7 +40,7 @@ describe("handlePollStart()", function () {
       expect(newState.active).to.be.true;
     });
 
-    it.skip(`does not start a poll when message is: !poll 1`, function () {
+    it(`does not start a poll when message is: !poll 1`, function () {
       expect(pollState.active).to.be.false;
       const newState = handlePollStart(`!poll 1`, pollState);
       expect(newState.active).to.be.false;
