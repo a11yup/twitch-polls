@@ -6,7 +6,7 @@ import {
   handlePollStop,
   handlePollTitleChange,
   handlePollVote,
-} from "../stateUpdaters.js";
+} from "../src/stateUpdaters.js";
 
 let pollState;
 

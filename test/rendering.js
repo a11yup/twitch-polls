@@ -1,7 +1,7 @@
 import chai, { expect } from "chai";
 import chaiDom from "chai-dom";
 import globalJsdom from "global-jsdom";
-import { handleMessage } from "../main.js";
+import { handleMessage } from "../src/main.js";
 import { within, queries } from "@testing-library/dom";
 
 chai.use(chaiDom);
