@@ -4,9 +4,7 @@ A Twitch polling tool bot and poll visualization overlay for custom polls.
 
 ## Integration into OBS
 
-Download the index.html and style.css and make sure that you keep them in the same folder.
-
-First, add the overlay by adding a browser source in OBS. The URL needs to be file-based (not http-based). **Don't** check "Local file" and enter this into the URL field and replace the path accordingly to wherever you put the downloaded files:
+TODO Describe how to run within a server.
 
 ```
 file:///path/to/index.html
@@ -71,7 +69,6 @@ This will stop the currently active poll in its current state and highlights the
 
 <img width="1920" alt="Bildschirmfoto 2022-07-30 um 22 10 43" src="https://user-images.githubusercontent.com/94025590/181994884-358fb293-2daa-4406-93f9-efd0bb93ab3a.png">
 <img width="1920" alt="Bildschirmfoto 2022-07-30 um 22 11 21" src="https://user-images.githubusercontent.com/94025590/181994887-30a27146-d739-4b77-8be2-e4b52dc968ee.png">
-
 
 ### Resuming a Poll
 
